@@ -6,21 +6,20 @@ class AuthManager {
 
     setupAuthStateListener() {
         auth.onAuthStateChanged((user) => {
-            const userActions = document.getElementById('userActions');
             const btnLogin = document.getElementById('btnLogin');
             const btnRegister = document.getElementById('btnRegister');
             const userProfile = document.getElementById('userProfile');
 
             if (user) {
-                // 用户已登录
-                btnLogin.hidden = true;
-                btnRegister.hidden = true;
-                userProfile.hidden = false;
+                // 用户已登录：隐藏登录注册按钮，显示用户图标
+                btnLogin.style.display = 'none';
+                btnRegister.style.display = 'none';
+                userProfile.style.display = 'block';
             } else {
-                // 用户未登录
-                btnLogin.hidden = false;
-                btnRegister.hidden = false;
-                userProfile.hidden = true;
+                // 用户未登录：显示登录注册按钮，隐藏用户图标
+                btnLogin.style.display = 'inline-block';
+                btnRegister.style.display = 'inline-block';
+                userProfile.style.display = 'none';
             }
         });
     }
