@@ -1,12 +1,11 @@
 // Firebase 配置
 const firebaseConfig = {
-    apiKey: "AIzaSyDFvSWYOwLGRxXdtTlJ9DtlA8p-pqYBf8k",
-    authDomain: "tishici360-52cf6.firebaseapp.com",
-    projectId: "tishici360-52cf6",
-    storageBucket: "tishici360-52cf6.firebasestorage.app",
-    messagingSenderId: "278338522496",
-    appId: "1:278338522496:web:3c4b76a9990ece4af38565",
-    measurementId: "G-D8CS3ZSDV6"
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID
 };
 
 // 声明全局变量

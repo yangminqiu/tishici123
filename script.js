@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 添加 API 配置
     const API_CONFIG = {
-        url: 'https://ai-maas.wair.ac.cn/maas/v1/chat/completions',
-        key: 'h1hp58eek42ek0taidpky6kg',
-        model: 'taichu2_mm'
+        url: process.env.AI_API_URL,
+        key: process.env.AI_API_KEY,
+        model: process.env.AI_MODEL
     };
 
     // 点击上传区域触发文件选择
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             analyzeButton.classList.add('loading');
             analyzeButton.textContent = '分析中...';
 
-            // 获取预览图片的 base64 数据
+            // 获取预览图��的 base64 数据
             const imageData = previewImage.src;
 
             // 准备请求数据
