@@ -880,3 +880,158 @@ footer {
     border-color: #E5E5E5;
     transform: none;
 } 
+
+/* 移动端响应式优化 */
+@media (max-width: 768px) {
+    /* 容器内边距调整 */
+    .container {
+        padding: 1rem;
+    }
+    
+    /* 导航栏优化 */
+    .nav-bar {
+        padding: 1rem 0;
+    }
+    
+    .nav-left h2 {
+        font-size: 1.3rem;
+    }
+    
+    /* 按钮大小调整 */
+    .btn-login, .btn-register {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    /* 标题大小调整 */
+    header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    header p {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* 支持工具图标调整 */
+    .supported-tools {
+        padding: 0.6rem 1rem;
+        gap: 1rem;
+    }
+    
+    .tool-item img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .tool-name {
+        font-size: 0.75rem !important;
+    }
+    
+    /* 上传区域优化 */
+    .upload-area {
+        padding: 1rem;
+    }
+    
+    .upload-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .upload-title {
+        font-size: 0.9rem;
+    }
+    
+    .upload-desc {
+        font-size: 0.8rem !important;
+    }
+    
+    /* 内容区域布局优化 */
+    .content-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    
+    .section-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .btn-analyze {
+        width: 100%;
+        padding: 0.5rem 1rem;
+    }
+    
+    /* 预览和结果区域调整 */
+    .preview-area, .result-area {
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+    }
+    
+    .prompt-box {
+        padding: 1rem;
+    }
+    
+    .prompt-box textarea {
+        font-size: 0.9rem;
+        min-height: 200px;
+    }
+    
+    /* 提示区域优化 */
+    .tips {
+        padding: 1rem;
+    }
+    
+    .tips p {
+        font-size: 0.85rem;
+    }
+    
+    .tips li {
+        font-size: 0.8rem;
+    }
+    
+    /* 模态框优化 */
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .form-group input {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* 页脚优化 */
+    footer {
+        margin-top: 2rem;
+        padding: 1rem 0;
+    }
+    
+    .footer-item {
+        font-size: 0.8rem;
+    }
+}
+
+/* 小屏幕设备优化 */
+@media (max-width: 480px) {
+    .nav-bar {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .supported-tools {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+} 
