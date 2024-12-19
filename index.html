@@ -3,13 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 提示词生成器</title>
+    <!-- SEO 优化 -->
+    <meta name="description" content="提示词360生成器是一款智能AI工具，可以通过分析图片自动生成适用于 Midjourney、Stable Diffusion、DALL·E 等AI绘画工具的专业提示词。">
+    <meta name="keywords" content="AI绘画, Midjourney提示词, Stable Diffusion提示词, DALL·E提示词, AI作图, 提示词生成器">
+    <meta name="author" content="提示词360">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tishici360.com/">
+    <meta property="og:title" content="提示词360生成器 - AI绘画提示词智能生成工具">
+    <meta property="og:description" content="一键生成专业的AI绘画提示词，支持Midjourney、Stable Diffusion、DALL·E等主流AI绘画工具">
+    <meta property="og:image" content="https://tishici360.com/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tishici360.com/">
+    <meta property="twitter:title" content="提示词360生成器 - AI绘画提示词智能生成工具">
+    <meta property="twitter:description" content="一键生成专业的AI绘画提示词，支持Midjourney、Stable Diffusion、DALL·E等主流AI绘画工具">
+    <meta property="twitter:image" content="https://tishici360.com/images/og-image.jpg">
+    
+    <!-- 网站图标 -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    
+    <title>提示词360生成器 - AI绘画提示词智能生成工具 | Midjourney | Stable Diffusion | DALL·E</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "提示词360生成器",
+      "description": "一款智能AI工具，可以通过分析图片自动生成适用于 Midjourney、Stable Diffusion、DALL·E 等AI绘画工具的专业提示词。",
+      "applicationCategory": "AI工具",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CNY"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "提示词360",
+        "url": "https://tishici360.com"
+      }
+    }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -35,21 +79,18 @@
         <header>
             <h1>提示词360生成器</h1>
             <p>上传一张需要复刻的图片，立即获取可以生成类似效果的AI提示词</p>
-            <p class="login-tip" style="color: var(--text-secondary); font-size: 0.9rem;">
-                请先登录后使用分析功能
-            </p>
             <div class="supported-tools">
                 <span>支持：</span>
                 <div class="tool-item">
-                    <img src="images/midjourney-icon.svg" alt="Midjourney" title="Midjourney">
+                    <img src="images/midjourney-icon.svg" alt="Midjourney AI绘画工具图标" title="Midjourney">
                     <span class="tool-name">Midjourney</span>
                 </div>
                 <div class="tool-item">
-                    <img src="images/sd-icon.svg" alt="Stable Diffusion" title="Stable Diffusion">
+                    <img src="images/sd-icon.svg" alt="Stable Diffusion AI绘画工具图标" title="Stable Diffusion">
                     <span class="tool-name">Stable Diffusion</span>
                 </div>
                 <div class="tool-item">
-                    <img src="images/dalle-icon.svg" alt="DALL·E" title="DALL·E">
+                    <img src="images/dalle-icon.svg" alt="DALL·E AI绘画工具图标" title="DALL·E">
                     <span class="tool-name">DALL·E</span>
                 </div>
             </div>
@@ -61,7 +102,7 @@
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
                 </svg>
                 <p class="upload-title">点击拖拽图片到这里</p>
-                <p class="upload-desc">支持 JPG、PNG、GIF 格式，最大 5MB</p>
+                <p class="upload-desc">支持JPG、PNG、GIF 格式，最大 5MB</p>
                 <input type="file" id="fileInput" accept="image/*" hidden>
             </div>
             
@@ -129,7 +170,7 @@
                     </div>
                 </form>
                 <div class="auth-divider">
-                    <span>或</span>
+                    <span>��</span>
                 </div>
                 <div class="social-login">
                     <button type="button" id="googleLogin" class="btn-google">
