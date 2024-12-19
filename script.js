@@ -41,6 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         uploadArea.style.borderColor = '#E5E5E5';
         
+        // 检查用户是否登录
+        if (!auth.currentUser) {
+            showMessage('请先登录后再上传图片', 'info');
+            const loginModal = document.getElementById('loginModal');
+            loginModal.classList.add('show');
+            loginModal.hidden = false;
+            return;
+        }
+        
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith('image/')) {
             handleFileSelect({ target: { files: [file] } });
@@ -49,6 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 分析按钮点击事件
     analyzeButton.addEventListener('click', async () => {
+        // 检查用户是否登录
+        if (!auth.currentUser) {
+            // 显示登录提示
+            showMessage('请先登录后再使用分析功能', 'info');
+            // 显示登录模态框
+            const loginModal = document.getElementById('loginModal');
+            loginModal.classList.add('show');
+            loginModal.hidden = false;
+            return;
+        }
+
         try {
             // 禁用按钮并显示加载状态
             analyzeButton.disabled = true;
@@ -139,6 +159,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 修改文件选择处理函数
     function handleFileSelect(e) {
+        // 检查用户是否登录
+        if (!auth.currentUser) {
+            // 显示登录提示
+            showMessage('请先登录后再上传图片', 'info');
+            // 显示登录模态框
+            const loginModal = document.getElementById('loginModal');
+            loginModal.classList.add('show');
+            loginModal.hidden = false;
+            // 清空文件选择
+            fileInput.value = '';
+            return;
+        }
+
         const file = e.target.files[0];
         if (!file) return;
 
@@ -161,10 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(file);
     }
 
-    // 显示消息
-    function showMessage(message) {
+    // 修改消息提示样式
+    function showMessage(message, type = 'success') {
         const messageEl = document.createElement('div');
-        messageEl.className = 'message success';
+        messageEl.className = `message ${type}`;
         messageEl.textContent = message;
         document.body.appendChild(messageEl);
 
