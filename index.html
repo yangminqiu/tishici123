@@ -6,8 +6,10 @@
     <title>AI 提示词生成器</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -19,6 +21,14 @@
                 <div class="user-actions" id="userActions">
                     <button class="btn-login" id="btnLogin">登录</button>
                     <button class="btn-register" id="btnRegister">注册</button>
+                    <div class="user-profile" id="userProfile" hidden>
+                        <div class="user-menu">
+                            <span class="username" id="username"></span>
+                            <div class="dropdown-menu" id="dropdownMenu" hidden>
+                                <button class="btn-logout" id="btnLogout">退出登录</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -52,24 +62,33 @@
                 <input type="file" id="fileInput" accept="image/*" hidden>
             </div>
             
-            <div class="preview-area" id="previewArea" hidden>
-                <h3>上传的参考图片</h3>
-                <img id="previewImage" alt="预览图片">
-            </div>
-            
-            <div class="result-area" id="resultArea" hidden>
-                <h3>AI 提示词分析结果</h3>
-                <div class="prompt-box">
-                    <textarea id="promptResult" readonly></textarea>
-                    <button id="copyButton">复制提示词</button>
+            <div class="content-wrapper">
+                <div class="content-left">
+                    <div class="section-header">
+                        <h3>上传的参考图片</h3>
+                        <button id="analyzeButton" class="btn-analyze">开始分析</button>
+                    </div>
+                    <div class="preview-area" id="previewArea" style="display: none;">
+                        <img id="previewImage" alt="预览图片">
+                    </div>
                 </div>
-                <div class="tips">
-                    <p>💡 使用提示：</p>
-                    <ul>
-                        <li>复制提示词后，可直接粘贴到 Midjourney、Stable Diffusion 等AI绘画工具中使用</li>
-                        <li>如果生成效果不理想，可以微调提示词中的关键词</li>
-                        <li>建议保存喜欢的提示词，方便以后重复使用</li>
-                    </ul>
+                
+                <div class="content-right">
+                    <h3>AI 提示词分析</h3>
+                    <div class="result-area" id="resultArea" style="display: none;">
+                        <div class="prompt-box">
+                            <textarea id="promptResult" readonly></textarea>
+                            <button id="copyButton">复制提示词</button>
+                        </div>
+                        <div class="tips">
+                            <p>💡 使用提示：</p>
+                            <ul>
+                                <li>复制提示词后，可直接粘贴到 Midjourney、Stable Diffusion 等AI绘画工具中使用</li>
+                                <li>如果生成效果不理想，可以微调提示词中的关键词</li>
+                                <li>建议保存喜欢的提示词，方便以后重复使用</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -124,7 +143,7 @@
                         <input type="email" id="registerEmail" required placeholder="请输入邮箱">
                     </div>
                     <div class="form-group">
-                        <label for="registerPassword">密码</label>
+                        <label for="registerPassword">密</label>
                         <input type="password" id="registerPassword" required placeholder="请输入密码">
                     </div>
                     <div class="form-group">

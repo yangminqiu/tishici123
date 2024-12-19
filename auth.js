@@ -1,6 +1,28 @@
 class AuthManager {
     constructor() {
         this.setupEventListeners();
+        this.setupAuthStateListener();
+    }
+
+    setupAuthStateListener() {
+        auth.onAuthStateChanged((user) => {
+            const userActions = document.getElementById('userActions');
+            const btnLogin = document.getElementById('btnLogin');
+            const btnRegister = document.getElementById('btnRegister');
+            const userProfile = document.getElementById('userProfile');
+
+            if (user) {
+                // 用户已登录
+                btnLogin.hidden = true;
+                btnRegister.hidden = true;
+                userProfile.hidden = false;
+            } else {
+                // 用户未登录
+                btnLogin.hidden = false;
+                btnRegister.hidden = false;
+                userProfile.hidden = true;
+            }
+        });
     }
 
     setupEventListeners() {
@@ -40,17 +62,50 @@ class AuthManager {
             const password = document.getElementById('registerPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
+            // 表单验证
+            if (!email || !password || !confirmPassword) {
+                this.showMessage('请填写所有必填项', 'error');
+                return;
+            }
+
             if (password !== confirmPassword) {
                 this.showMessage('两次输入的密码不一致', 'error');
                 return;
             }
 
             try {
-                await auth.createUserWithEmailAndPassword(email, password);
-                this.handleRegisterSuccess();
+                // 显示加载状态
+                const submitButton = e.target.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.textContent = '注册中...';
+
+                // 创建用户
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                
+                // 创建用户文档
+                await db.collection('users').doc(userCredential.user.uid).set({
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                // 关闭模态框
+                const modal = document.getElementById('registerModal');
+                modal.classList.remove('show');
+                modal.hidden = true;
+
+                // 显示成功消息
+                this.showMessage('注册成功！');
+
+                // 清空表单
+                e.target.reset();
             } catch (error) {
                 console.error('Registration failed:', error);
                 this.showMessage(this.getErrorMessage(error), 'error');
+            } finally {
+                // 恢复按钮状态
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
             }
         });
 
@@ -90,6 +145,33 @@ class AuthManager {
             if (e.target === registerModal) {
                 registerModal.classList.remove('show');
                 registerModal.hidden = true;
+            }
+        });
+
+        // 添加用户菜单点击事件
+        const userMenu = document.querySelector('.user-menu');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        userMenu?.addEventListener('click', () => {
+            dropdownMenu.hidden = !dropdownMenu.hidden;
+        });
+
+        // 点击其他地方关闭下拉菜单
+        document.addEventListener('click', (e) => {
+            if (!userMenu?.contains(e.target)) {
+                dropdownMenu.hidden = true;
+            }
+        });
+
+        // 退出登录
+        document.getElementById('btnLogout')?.addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                this.showMessage('已退出登录');
+                dropdownMenu.hidden = true;
+            } catch (error) {
+                console.error('Logout failed:', error);
+                this.showMessage('退出失败，请重试', 'error');
             }
         });
     }

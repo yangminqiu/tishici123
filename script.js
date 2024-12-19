@@ -6,6 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultArea = document.getElementById('resultArea');
     const promptResult = document.getElementById('promptResult');
     const copyButton = document.getElementById('copyButton');
+    const analyzeButton = document.getElementById('analyzeButton');
+
+    // 添加 API 配置
+    const API_CONFIG = {
+        url: 'https://ai-maas.wair.ac.cn/maas/v1/chat/completions',
+        key: 'h1hp58eek42ek0taidpky6kg',
+        model: 'taichu2_mm'
+    };
 
     // 点击上传区域触发文件选择
     uploadArea.addEventListener('click', () => {
@@ -39,6 +47,79 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 分析按钮点击事件
+    analyzeButton.addEventListener('click', async () => {
+        try {
+            // 禁用按钮并显示加载状态
+            analyzeButton.disabled = true;
+            analyzeButton.classList.add('loading');
+            analyzeButton.textContent = '分析中...';
+
+            // 获取预览图片的 base64 数据
+            const imageData = previewImage.src;
+
+            // 准备请求数据
+            const requestData = {
+                temperature: 0.8,
+                top_p: 0.9,
+                repetition_penalty: 1,
+                stream: false, // 改为 false 以获取完整响应
+                max_tokens: 3000,
+                model: API_CONFIG.model,
+                system_prompt: "你是一个专业的图片分析师，请分析图片的风格、构图、色彩、光影等特点，并生成适合AI绘画的详细提示词。",
+                messages: [
+                    {
+                        content: [
+                            {
+                                type: "text",
+                                text: "请分析这张图片的风格特点，并生成适合AI绘画的详细提示词。"
+                            },
+                            {
+                                type: "image_url",
+                                image_url: {
+                                    url: imageData
+                                }
+                            }
+                        ],
+                        role: "user"
+                    }
+                ]
+            };
+
+            // 发送请求
+            const response = await fetch(API_CONFIG.url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_CONFIG.key}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            // 显示结果
+            resultArea.style.display = 'block';
+            promptResult.value = result.choices[0].message.content;
+
+            // 滚动到结果区域
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+
+        } catch (error) {
+            console.error('Analysis failed:', error);
+            alert('分析失败，请重试: ' + error.message);
+        } finally {
+            // 恢复按钮状态
+            analyzeButton.disabled = false;
+            analyzeButton.classList.remove('loading');
+            analyzeButton.textContent = '开始分析';
+        }
+    });
+
     // 复制按钮点击事件
     copyButton.addEventListener('click', () => {
         promptResult.select();
@@ -46,21 +127,38 @@ document.addEventListener('DOMContentLoaded', () => {
         showMessage('提示词已复制到剪贴板');
     });
 
-    // 处理文件选择
-    async function handleFileSelect(e) {
+    // 添加图片转 base64 函数
+    function getBase64Image(img) {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        return canvas.toDataURL("image/jpeg");
+    }
+
+    // 修改文件选择处理函数
+    function handleFileSelect(e) {
         const file = e.target.files[0];
         if (!file) return;
+
+        // 检查文件大小
+        if (file.size > 5 * 1024 * 1024) {
+            alert('文件大小不能超过 5MB');
+            return;
+        }
 
         // 显示预览
         const reader = new FileReader();
         reader.onload = (e) => {
             previewImage.src = e.target.result;
-            previewArea.hidden = false;
+            previewArea.style.display = 'block';
+            resultArea.style.display = 'none';
+            
+            // 滚动到预览区域
+            previewArea.scrollIntoView({ behavior: 'smooth' });
         };
         reader.readAsDataURL(file);
-
-        // TODO: 调用API处理图片
-        // 这里添加调用API的代码
     }
 
     // 显示消息

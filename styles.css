@@ -102,13 +102,13 @@ header p {
 .upload-area {
     background: var(--card-background);
     border-radius: var(--border-radius);
-    padding: 3rem 2rem;
+    padding: 1rem 2rem;
     text-align: center;
     border: 2px dashed #E5E5E5;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: var(--shadow);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .upload-area:hover {
@@ -118,7 +118,9 @@ header p {
 
 .upload-icon {
     fill: var(--primary-color);
-    margin-bottom: 1rem;
+    margin-bottom: 0.3rem;
+    width: 40px;
+    height: 40px;
     transition: transform 0.3s ease;
 }
 
@@ -126,21 +128,22 @@ header p {
     transform: scale(1.1);
 }
 
-.upload-area p {
+.upload-title {
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
 }
 
 .upload-desc {
-    font-size: 0.9rem !important;
-    margin-top: 0.5rem;
+    font-size: 0.85rem !important;
+    margin-top: 0.2rem;
     opacity: 0.8;
 }
 
 .preview-area {
     background: var(--card-background);
     border-radius: var(--border-radius);
-    padding: 1rem;
+    padding: 0.5rem;
     margin: 2rem 0;
     box-shadow: var(--shadow);
     animation: slideUp 0.5s ease-out;
@@ -148,8 +151,10 @@ header p {
 
 .preview-area img {
     width: 100%;
-    border-radius: calc(var(--border-radius) - 4px);
-    object-fit: cover;
+    height: 100%;
+    object-fit: contain;
+    border-radius: calc(var(--border-radius) - 2px);
+    display: block;
 }
 
 .preview-area h3,
@@ -161,6 +166,10 @@ header p {
 }
 
 .result-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
     background: var(--card-background);
     border-radius: var(--border-radius);
     padding: 2rem;
@@ -170,14 +179,18 @@ header p {
 }
 
 .prompt-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     background: var(--background-color);
-    border-radius: calc(var(--border-radius) - 4px);
-    padding: 1rem;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    min-height: 300px;
 }
 
-textarea {
-    width: 100%;
-    min-height: 150px;
+.prompt-box textarea {
+    flex: 1;
+    min-height: 250px;
     border: none;
     background: transparent;
     resize: vertical;
@@ -187,8 +200,12 @@ textarea {
     line-height: 1.6;
 }
 
-textarea:focus {
-    outline: none;
+.prompt-box button {
+    width: auto;
+    align-self: flex-end;
+    margin-top: 1rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
 }
 
 button {
@@ -248,7 +265,12 @@ button:active {
     }
     
     .upload-area {
-        padding: 2rem 1rem;
+        padding: 0.8rem 1rem;
+    }
+    
+    .upload-icon {
+        width: 32px;
+        height: 32px;
     }
 }
 
@@ -293,8 +315,8 @@ footer a:hover {
 }
 
 .tips {
-    margin-top: 2rem;
-    padding: 1.5rem;
+    margin-top: auto;
+    padding: 1.2rem 1.5rem;
     background: rgba(94, 92, 230, 0.1);
     border-radius: var(--border-radius);
 }
@@ -303,18 +325,20 @@ footer a:hover {
     color: var(--text-primary);
     font-weight: 600;
     margin-bottom: 0.8rem;
+    font-size: 0.9rem;
 }
 
 .tips ul {
     list-style: none;
-    padding-left: 1.5rem;
+    padding-left: 1.2rem;
 }
 
 .tips li {
     color: var(--text-secondary);
+    font-size: 0.85rem;
     margin-bottom: 0.5rem;
     position: relative;
-    line-height: 1.6;
+    line-height: 1.5;
 }
 
 .tips li::before {
@@ -443,7 +467,7 @@ footer a:hover {
     border-radius: var(--border-radius);
 }
 
-/* 模态框样式 */
+/* 模态框样式优化 */
 .modal {
     position: fixed;
     top: 0;
@@ -466,10 +490,9 @@ footer a:hover {
     background: var(--card-background);
     border-radius: var(--border-radius);
     padding: 2.5rem;
-    width: 100%;
+    width: 90%;
     max-width: 400px;
     box-shadow: var(--shadow);
-    animation: modalSlideIn 0.3s ease-out;
     position: relative;
 }
 
@@ -484,6 +507,7 @@ footer a:hover {
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
+    writing-mode: horizontal-tb;
 }
 
 .btn-close {
@@ -508,12 +532,14 @@ footer a:hover {
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
+    width: 100%;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: 100%;
 }
 
 .form-group label {
@@ -523,6 +549,7 @@ footer a:hover {
 }
 
 .form-group input {
+    width: 100%;
     padding: 0.8rem 1rem;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: var(--border-radius);
@@ -542,16 +569,17 @@ footer a:hover {
 }
 
 .btn-submit {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
     background: var(--primary-color);
     color: white;
     border: none;
-    padding: 0.8rem;
     border-radius: var(--border-radius);
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 0.5rem;
 }
 
 .btn-submit:hover {
@@ -572,4 +600,244 @@ footer a:hover {
         opacity: 1;
         transform: translateY(0);
     }
+} 
+
+.btn-analyze {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn-analyze:hover {
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+.btn-analyze:disabled {
+    background: var(--text-secondary);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 添加加载动画 */
+.btn-analyze.loading::after {
+    content: '';
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+} 
+
+/* 内容布局优化 */
+.content-wrapper {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.content-left, .content-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 标题居中 */
+.content-left h3, .content-right h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;  /* 标题居中 */
+}
+
+/* 预览区域和结果区域对齐 */
+.preview-area, .result-area {
+    flex: 1;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    box-shadow: var(--shadow);
+    animation: slideUp 0.5s ease-out;
+    margin-top: 0;
+    height: 100%;
+    display: none;
+}
+
+/* 显示时的动画效果 */
+.preview-area[style*="display: block"],
+.result-area[style*="display: block"] {
+    display: flex !important;
+    flex-direction: column;
+    animation: slideUp 0.5s ease-out;
+}
+
+/* 调整图片容器 */
+.preview-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: calc(var(--border-radius) - 2px);
+    display: block;
+}
+
+/* 调整结果区域内部布局 */
+.prompt-box {
+    flex: 1;  /* 让提示词框占满剩余空间 */
+    display: flex;
+    flex-direction: column;
+}
+
+.prompt-box textarea {
+    flex: 1;  /* 文本框占满剩余空间 */
+    min-height: 0;  /* 移除最小高度限制 */
+}
+
+/* 响应式布局调整 */
+@media (max-width: 768px) {
+    .content-wrapper {
+        flex-direction: column;
+    }
+    
+    .preview-area, .result-area {
+        min-height: 300px;  /* 在移动端设置最小高度 */
+    }
+}
+
+/* 调整按钮样式 */
+.btn-analyze {
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 1rem;
+} 
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.section-header h3 {
+    margin-bottom: 0;
+}
+
+.section-header .btn-analyze {
+    margin: 0;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    width: auto;
+    min-width: 90px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+} 
+
+/* 用户信息样式优化 */
+.user-menu {
+    cursor: pointer;
+    padding: 0.5rem;  /* 减小内边距使按钮更紧凑 */
+    border-radius: 50%;  /* 改为圆形 */
+    transition: all 0.3s ease;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;  /* 固定宽度 */
+    height: 40px;  /* 固定高度 */
+}
+
+.user-menu:hover {
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+}
+
+.username {
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 用户图标样式 */
+.username::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: 0;  /* 移除间距 */
+}
+
+/* 隐藏用户名文本 */
+.username span {
+    display: none;
+}
+
+/* 下拉菜单样式优化 */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 0.5rem;
+    min-width: 150px;
+    z-index: 100;
+    animation: fadeIn 0.2s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.btn-logout {
+    width: 100%;
+    text-align: left;
+    padding: 0.8rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 0;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 添加退出图标 */
+.btn-logout::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2386868B'%3E%3Cpath d='M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.btn-logout:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--primary-color);
+}
+
+.btn-logout:hover::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230066CC'%3E%3Cpath d='M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z'/%3E%3C/svg%3E");
 } 
