@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 提示词生成器</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="nav-bar">
+            <div class="nav-left">
+                <h2>提示词360</h2>
+            </div>
+            <div class="nav-right">
+                <div class="user-actions" id="userActions">
+                    <button class="btn-login" id="btnLogin">登录</button>
+                    <button class="btn-register" id="btnRegister">注册</button>
+                </div>
+            </div>
+        </nav>
+        <header>
+            <h1>提示词360生成器</h1>
+            <p>上传一张你喜欢的图片，立即获取可以生成类似效果的AI提示词</p>
+            <div class="supported-tools">
+                <span>支持：</span>
+                <div class="tool-item">
+                    <img src="images/midjourney-icon.svg" alt="Midjourney" title="Midjourney">
+                    <span class="tool-name">Midjourney</span>
+                </div>
+                <div class="tool-item">
+                    <img src="images/sd-icon.svg" alt="Stable Diffusion" title="Stable Diffusion">
+                    <span class="tool-name">Stable Diffusion</span>
+                </div>
+                <div class="tool-item">
+                    <img src="images/dalle-icon.svg" alt="DALL·E" title="DALL·E">
+                    <span class="tool-name">DALL·E</span>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="upload-area" id="uploadArea">
+                <svg class="upload-icon" width="50" height="50" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                </svg>
+                <p class="upload-title">点击拖拽图片到这里</p>
+                <p class="upload-desc">支持 JPG、PNG、GIF 格式，最大 5MB</p>
+                <input type="file" id="fileInput" accept="image/*" hidden>
+            </div>
+            
+            <div class="preview-area" id="previewArea" hidden>
+                <h3>上传的参考图片</h3>
+                <img id="previewImage" alt="预览图片">
+            </div>
+            
+            <div class="result-area" id="resultArea" hidden>
+                <h3>AI 提示词分析结果</h3>
+                <div class="prompt-box">
+                    <textarea id="promptResult" readonly></textarea>
+                    <button id="copyButton">复制提示词</button>
+                </div>
+                <div class="tips">
+                    <p>💡 使用提示：</p>
+                    <ul>
+                        <li>复制提示词后，可直接粘贴到 Midjourney、Stable Diffusion 等AI绘画工具中使用</li>
+                        <li>如果生成效果不理想，可以微调提示词中的关键词</li>
+                        <li>建议保存喜欢的提示词，方便以后重复使用</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">
+                鲁ICP备2024126706号
+            </a>
+        </footer>
+        <!-- 登录模态框 -->
+        <div class="modal" id="loginModal" hidden>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>登录</h2>
+                    <button class="btn-close" id="closeLoginModal">&times;</button>
+                </div>
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginEmail">邮箱</label>
+                        <input type="email" id="loginEmail" required placeholder="请输入邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">密码</label>
+                        <input type="password" id="loginPassword" required placeholder="请输入密码">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">登录</button>
+                        <a href="#" class="forgot-password" id="btnForgotPassword">忘记密码？</a>
+                    </div>
+                </form>
+                <div class="auth-divider">
+                    <span>或</span>
+                </div>
+                <div class="social-login">
+                    <button type="button" id="googleLogin" class="btn-google">
+                        <img src="images/google-icon.svg" alt="Google" />
+                        使用 Google 账号登录
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注册模态框 -->
+        <div class="modal" id="registerModal" hidden>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>注册</h2>
+                    <button class="btn-close" id="closeRegisterModal">&times;</button>
+                </div>
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="registerEmail">邮箱</label>
+                        <input type="email" id="registerEmail" required placeholder="请输入邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">密码</label>
+                        <input type="password" id="registerPassword" required placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认密码</label>
+                        <input type="password" id="confirmPassword" required placeholder="请再次输入密码">
+                    </div>
+                    <button type="submit" class="btn-submit">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

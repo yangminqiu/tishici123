@@ -1,0 +1,13 @@
+{
+  "name": "tishici123",
+  "version": "1.0.0",
+  "description": "这是一个帮助用户复刻图片风格的AI提示词生成工具。上传一张图片，系统会自动分析图片的风格特征，并生成可以用于AI绘图的专业提示词，帮助用户创作出相似风格的图片。",
+  "main": "auth.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
