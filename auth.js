@@ -207,13 +207,95 @@ class AuthManager {
             case 'auth/invalid-email':
                 return '邮箱格式不正确';
             case 'auth/weak-password':
-                return '密码强度太弱';
+                return '密码强度太弱，至少需要6位字符';
             case 'auth/user-not-found':
-                return '用户不存在';
+                return '用户不存在，请先注册';
             case 'auth/wrong-password':
-                return '密码错误';
+                return '密码错误，请重试';
+            case 'auth/invalid-login-credentials':
+                return '邮箱或密码错误，请重试';
+            case 'auth/too-many-requests':
+                return '登录尝试次数过多，请稍后再试';
             default:
                 return error.message;
+        }
+    }
+
+    async handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        // 表单验证
+        if (!email || !password) {
+            this.showMessage('请填写所有必填项', 'error');
+            return;
+        }
+
+        try {
+            const submitButton = document.querySelector('#loginForm button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = '登录中...';
+
+            await auth.signInWithEmailAndPassword(email, password);
+            document.getElementById('loginModal').hidden = true;
+            this.showMessage('登录成功！');
+            
+            // 清空表单
+            document.getElementById('loginForm').reset();
+        } catch (error) {
+            console.error('Login failed:', error);
+            this.showMessage(this.getErrorMessage(error), 'error');
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = originalText;
+        }
+    }
+
+    async handleRegister() {
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        // 表单验证
+        if (!email || !password || !confirmPassword) {
+            this.showMessage('请填写所有必填项', 'error');
+            return;
+        }
+
+        // 密码长度验证
+        if (password.length < 6) {
+            this.showMessage('密码长度至少需要6位字符', 'error');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            this.showMessage('两次输入的密码不一致', 'error');
+            return;
+        }
+
+        try {
+            const submitButton = document.querySelector('#registerForm button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = '注册中...';
+
+            const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+            
+            // 创建用户文档
+            await db.collection('users').doc(userCredential.user.uid).set({
+                email: email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            document.getElementById('registerModal').hidden = true;
+            this.showMessage('注册成功！');
+            document.getElementById('registerForm').reset();
+        } catch (error) {
+            console.error('Registration failed:', error);
+            this.showMessage(this.getErrorMessage(error), 'error');
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = '注册';
         }
     }
 }

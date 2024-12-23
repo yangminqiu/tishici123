@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewImage = document.getElementById('previewImage');
     const resultArea = document.getElementById('resultArea');
     const promptResult = document.getElementById('promptResult');
+    const promptResultEn = document.getElementById('promptResultEn');
     const copyButton = document.getElementById('copyButton');
     const analyzeButton = document.getElementById('analyzeButton');
 
@@ -83,16 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 temperature: 0.8,
                 top_p: 0.9,
                 repetition_penalty: 1,
-                stream: false, // 改为 false 以获取完整响应
+                stream: false,
                 max_tokens: 3000,
                 model: API_CONFIG.model,
-                system_prompt: "你是一个专业的图片分析师，请分析图片的风格、构图、色彩、光影等特点，并生成适合AI绘画的详细提示词。",
+                system_prompt: "你是一个专业的图片分析师和AI提示词专家，请从以下几个方面详细分析图片：1. 主题内容描述 2. 构图和视角特点 3. 色彩和光影效果 4. 风格和艺术特征 5. 细节和质感表现。然后生成详细的AI绘画提示词，包含以上所有特点。",
                 messages: [
                     {
                         content: [
                             {
                                 type: "text",
-                                text: "请分析这张图片的风格特点，并生成适合AI绘画的详细提示词。"
+                                text: "请对这张图片进行专业的艺术分析，包括：1. 主题内容的详细描述 2. 构图方式和视角特点 3. 色彩搭配和光影效果 4. 艺术风格和美学特征 5. 材质和细节表现。然后生成一个包含所有这些特点的详细AI提示词。请分别用[ZH]和[EN]标记提供中英文两个版本，确保两个版本都非常详尽。"
                             },
                             {
                                 type: "image_url",
@@ -111,20 +112,67 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${API_CONFIG.key}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify(requestData)
             });
 
             if (!response.ok) {
-                throw new Error(`API request failed: ${response.status}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(`API request failed: ${response.status} - ${errorData.message || 'Unknown error'}`);
             }
 
             const result = await response.json();
+            const content = result.choices[0].message.content;
+            
+            // 分离中英文结果
+            let zhContent = '', enContent = '';
+            
+            try {
+                // 使用更严格的正则表达式来分离内容
+                const zhRegex = /\[ZH\]([\s\S]*?)\[EN\]/;
+                const enRegex = /\[EN\]([\s\S]*?)(?:\[ZH\]|$)/;
+                
+                const zhMatch = content.match(zhRegex);
+                const enMatch = content.match(enRegex);
+                
+                if (zhMatch && zhMatch[1]) {
+                    zhContent = zhMatch[1].trim();
+                }
+                
+                if (enMatch && enMatch[1]) {
+                    enContent = enMatch[1].trim();
+                }
+                
+                // 如果没有找到标记，尝试按段落分割
+                if (!zhContent && !enContent) {
+                    const paragraphs = content.split('\n\n').filter(p => p.trim());
+                    // 检查是否包含中文字符
+                    const isChinese = str => /[\u4e00-\u9fa5]/.test(str);
+                    
+                    paragraphs.forEach(p => {
+                        if (isChinese(p)) {
+                            zhContent += (zhContent ? '\n\n' : '') + p;
+                        } else {
+                            enContent += (enContent ? '\n\n' : '') + p;
+                        }
+                    });
+                }
+                
+                // 确保两种语言都有内容
+                if (!zhContent) zhContent = '未能获取中文内容';
+                if (!enContent) enContent = 'Content not available in English';
+            } catch (error) {
+                console.error('Content parsing error:', error);
+                zhContent = '内容解析错误';
+                enContent = 'Content parsing error';
+            }
 
             // 显示结果
             resultArea.style.display = 'block';
-            promptResult.value = result.choices[0].message.content;
+            document.querySelector('.tab-pane[data-lang="zh"]').value = zhContent;
+            document.querySelector('.tab-pane[data-lang="en"]').value = enContent;
 
             // 滚动到结果区域
             resultArea.scrollIntoView({ behavior: 'smooth' });
@@ -140,11 +188,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 复制按钮点击事件
+    // 添加标签切换功能
+    document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            // 移除所有活动状态
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            
+            // 添加当前活动状态
+            button.classList.add('active');
+            const lang = button.dataset.lang;
+            document.querySelector(`.tab-pane[data-lang="${lang}"]`).classList.add('active');
+        });
+    });
+
+    // 修改复制按钮逻辑
     copyButton.addEventListener('click', () => {
-        promptResult.select();
+        // 获取当前活动的文本框
+        const activeTab = document.querySelector('.tab-pane.active');
+        activeTab.select();
         document.execCommand('copy');
-        showMessage('提示词已复制到剪贴板');
+        showMessage(activeTab.dataset.lang === 'zh' ? '中文提示词已复制到剪贴板' : 'English prompt copied to clipboard');
     });
 
     // 添加图片转 base64 函数
@@ -163,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!auth.currentUser) {
             // 显示登录提示
             showMessage('请先登录后再上传图片', 'info');
-            // 显示登录模态框
+            // 显示登录模态���
             const loginModal = document.getElementById('loginModal');
             loginModal.classList.add('show');
             loginModal.hidden = false;

@@ -121,7 +121,14 @@
                     <h3>提示词分析结果</h3>
                     <div class="result-area" id="resultArea" style="display: none;">
                         <div class="prompt-box">
-                            <textarea id="promptResult" readonly></textarea>
+                            <div class="language-tabs">
+                                <button class="tab-btn active" data-lang="zh">中文</button>
+                                <button class="tab-btn" data-lang="en">English</button>
+                            </div>
+                            <div class="tab-content">
+                                <textarea id="promptResult" class="tab-pane active" data-lang="zh" readonly></textarea>
+                                <textarea id="promptResultEn" class="tab-pane" data-lang="en" readonly></textarea>
+                            </div>
                             <button id="copyButton">复制提示词</button>
                         </div>
                         <div class="tips">
